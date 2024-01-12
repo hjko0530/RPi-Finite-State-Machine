@@ -1,5 +1,5 @@
-# include <playLoopFSM.h>
-
+# include <FiniteStateMachine.h>
+# include <FSM_Common.h>
 StateMachine::StateMachine(){
     currentState = S_STOP;
     timeval tv;
@@ -12,14 +12,17 @@ int StateMachine::getCurrentState(){
     return currentState;
 }   
 
-void StateMachine::handle_event(Event cmd){
-    if (TransitionTable[currentState][static_cast<int>(cmd)]==CANNOT_HAPPEN){
+void StateMachine::transition(int cmd){
+    if (TransitionTable[currentState][cmd]==CANNOT_HAPPEN){
         cerr<<"Invalid Transition"<<endl;
+        return;
     }
-    else if(TransitionTable[currentState][static_cast<int>(cmd)]!=EVENT_IGNORE){
-        currentState=TransitionTable[currentState][static_cast<int>(cmd)];
-        (this->*ST_func[currentState])(); 
-        (this->*ACT_func[cmd])();// if cmd==RESUME 
+    else if(TransitionTable[currentState][cmd]!=EVENT_IGNORE){
+        (this->EX_func[currentState])();
+        nextState=TransitionTable[currentState][cmd];
+        (this->EN_func[currentState])();
+        currentState=nextState;
+        // (this->ST_func[currentState])(); 
     }
     return;
 }
@@ -31,6 +34,12 @@ void StateMachine::setState(int nextState){
 
 void StateMachine::ST_Play() {
     std::cout << "In state PLAY\n";
+    timeval tv;
+    tv = getCalculatedTime(data.baseTime);
+    long played_us = tv.tv_sec * 1000000 + tv.tv_usec;
+    if (played_us > playingState.data.stopTime && playingState.data.stopTime != -1) {
+        stop(&this);
+    }
 }
 
 void StateMachine::ST_Pause() {
@@ -42,8 +51,10 @@ void StateMachine::ST_Stop() {
 }
 
 // Exit functions
-void StateMachine::EX_Play() {
+void StateMachine::EX_Play() {//EXIT S_PLAY: store playedTime
     std::cout << "Exiting state PLAY\n";
+    this->data.playedTime = getCalculatedTime(baseTime);
+    return;
 }
 
 void StateMachine::EX_Pause() {
@@ -52,11 +63,32 @@ void StateMachine::EX_Pause() {
 
 void StateMachine::EX_Stop() {
     std::cout << "Exiting state STOP\n";
+    restart();
+    return;
 }
 
 // Entry functions
 void StateMachine::EN_Play() {
-    std::cout << "Entering state PLAY\n";
+    std::cout << "Entering state PLAY\n"; //delay
+    timeval tv;
+    while (true)
+    {
+        tv=this->getPlayedTime();
+        long delayed_us = tv.tv_sec * 1000000 + tv.tv_usec;
+        of_player.delayDisplay(&delayingDisplay);
+        led_player.delayDisplay(&delayingDisplay);
+        cerr << "display" << endl;
+        if (delayed_us > data.delayTime / 5l) delayingDisplay = false;
+        cerr << "display off" << endl;
+        if (delayed_us > data.delayTime) {
+            cerr << "delay out" << endl;
+            fprintf(stderr, "play\n");
+            data.baseTime = getCalculatedTime(data.playedTime);
+            cerr << "startTime: " << data.playedTime.tv_sec << " " << data.playedTime.tv_usec << endl;
+            break;
+        }
+    }
+    cerr << "Delay finished " << endl<< "Start playing" << endl;
 }
 
 void StateMachine::EN_Pause() {
@@ -67,74 +99,11 @@ void StateMachine::EN_Stop() {
     std::cout << "Entering state STOP\n";
 }
 
-void StateMachine::ACT_Play() {
-    std::cout << "Action: Play\n";
 
-}
-const std::vector<std::string> split(const std::string &str, const std::string &pattern) {
-    std::vector<std::string> result;
-    std::string::size_type begin, end;
-
-    end = str.find(pattern);
-    begin = 0;
-
-    while (end != std::string::npos) {
-        if (end - begin != 0) {
-            result.push_back(str.substr(begin, end - begin));
-        }
-        begin = end + pattern.size();
-        end = str.find(pattern, begin);
-    }
-
-    if (begin != str.length()) {
-        result.push_back(str.substr(begin));
-    }
-    return result;
-}
-
-
-int parse_command(StateMachine* fsm,std::string str) {
-    if (str.length() == 1) return -1;
-    std::vector<std::string> cmd = split(str, " ");
-    string cmds[3]= {"play", "pause", "stop"};
-    int cmd_recv=-1;
-    long startusec=0;
-    for (int i = 0; i < 3; i++) {
-        if (cmd[0] == cmds[i]) {
-            if (i == PLAY) {
-            fsm->data.delayTime=0;
-            gettimeofday(&fsm->data.baseTime, NULL);//for delay display
-            if(fsm->getCurrentState()==S_PAUSE && cmd[1]=="0"&& cmd[2] == "-1" && cmd[4] == "0"){
-                write_fifo(true);
-                cmd_recv=RESUME;
-                fsm->handle_event(static_cast<Event>(cmd_recv));
-                return cmd_recv;
-            }
-            else if (cmd.size() >= 3 && cmd[cmd.size() - 2] == "-d") {
-                fsm->data.delayTime = std::stoi(cmd[cmd.size() - 1]);
-                if (cmd.size() > 3) {
-                    startusec = std::stoi(cmd[1]);
-                }
-                if (cmd.size() > 4) {
-                    fsm->data.stopTime = std::stoi(cmd[2]);
-                    fsm->data.stopTimeAssigned = true;
-                }
-            } else {
-                if (cmd.size()>1) {
-                    startusec = std::stoi(cmd[1]);
-                }
-                if (cmd.size() > 2) {
-                    fsm->data.stopTime = std::stoi(cmd[2]);
-                    fsm->data.stopTimeAssigned = true;
-                }
-            }
-            fsm->data.playedTime.tv_sec = startusec / 1000000;
-            fsm->data.playedTime.tv_usec = startusec % 1000000;
-            }
-            cmd_recv=i;
-            write_fifo(true);
-            fsm->handle_event(static_cast<Event>(cmd_recv));
-        }
-    }
+timeval StateMachine::getPlayedTime() {
+    timeval tv = getCalculatedTime(data.baseTime);
+    data.playedTime=tv;
+    fprintf(stderr, "playedTime: %ld %ld\n", tv.tv_sec, tv.tv_usec);
+    return;
 }
 
