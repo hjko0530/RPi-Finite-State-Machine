@@ -143,11 +143,11 @@ inline int parse_command(StateMachine* fsm,std::string str) {
     return -1;
 }
 
-inline void stop(StateMachine* fsm) {
+/*inline void stop(StateMachine* fsm) {
     fprintf(stderr, "stop\n");
     // of_playing = led_playing = paused = 
     fsm->data.stopTimeAssigned = delaying = false;
     fsm->data.stopTime = -1;
     fsm->setState(S_STOP);
-}
+}*/
 #endif

@@ -1,10 +1,10 @@
 # include <FiniteStateMachine.h>
 # include <FSM_Common.h>
 StateMachine::StateMachine(){
-    currentState = S_STOP;
     timeval tv;
     tv.tv_sec=tv.tv_usec=0;  
     setData(tv,tv,-1,0,false,false);
+    currentState = nextState = S_STOP;
 }
 
 
@@ -20,17 +20,16 @@ void StateMachine::transition(int cmd){
     else if(TransitionTable[currentState][cmd]!=EVENT_IGNORE){
         (this->EX_func[currentState])();
         nextState=TransitionTable[currentState][cmd];
-        (this->EN_func[currentState])();
+        (this->EN_func[nextState])();
         currentState=nextState;
-        // (this->ST_func[currentState])(); 
     }
     return;
 }
 
-void StateMachine::setState(int nextState){
+/*void StateMachine::setState(int nextState){
     currentState=nextState;
     return;
-}
+}*/
 
 void StateMachine::ST_Play() {
     std::cout << "In state PLAY\n";
@@ -38,39 +37,37 @@ void StateMachine::ST_Play() {
     tv = getCalculatedTime(data.baseTime);
     long played_us = tv.tv_sec * 1000000 + tv.tv_usec;
     if (played_us > playingState.data.stopTime && playingState.data.stopTime != -1) {
-        stop(&this);
+        (this->EX_func[currentState])();
+        currentState=nextState= S_STOP;
+        (this->EN_func[currentState])();
     }
 }
 
 void StateMachine::ST_Pause() {
-    std::cout << "In state PAUSE\n";
+    
 }
 
 void StateMachine::ST_Stop() {
-    std::cout << "In state STOP\n";
+
 }
 
 // Exit functions
 void StateMachine::EX_Play() {//EXIT S_PLAY: store playedTime
-    std::cout << "Exiting state PLAY\n";
     this->data.playedTime = getCalculatedTime(baseTime);
     return;
 }
 
 void StateMachine::EX_Pause() {
-    std::cout << "Exiting state PAUSE\n";
+
 }
 
 void StateMachine::EX_Stop() {
-    std::cout << "Exiting state STOP\n";
-    restart();
-    return;
+     restart(); 
 }
 
 // Entry functions
 void StateMachine::EN_Play() {
-    std::cout << "Entering state PLAY\n"; //delay
-    timeval tv;
+    timeval tv;    //delay
     while (true)
     {
         tv=this->getPlayedTime();
@@ -92,11 +89,15 @@ void StateMachine::EN_Play() {
 }
 
 void StateMachine::EN_Pause() {
-    std::cout << "Entering state PAUSE\n";
+    
 }
 
 void StateMachine::EN_Stop() {
-    std::cout << "Entering state STOP\n";
+    fprintf(stderr, "stop\n");
+    // of_playing = led_playing = paused = 
+    fsm->data.stopTimeAssigned = delaying = false;
+    fsm->data.stopTime = -1;
+    //fsm->setState(S_STOP);
 }
 
 
@@ -105,5 +106,14 @@ timeval StateMachine::getPlayedTime() {
     data.playedTime=tv;
     fprintf(stderr, "playedTime: %ld %ld\n", tv.tv_sec, tv.tv_usec);
     return;
+}
+
+void StateMachine::setData(timeval _baseTime, timeval _playedTime, long _stopTime, long _delayTime, bool _stopTimeAssigned, bool _isLiveEditting){
+    data.baseTime = _baseTime;
+    data.playedTime = _playedTime;
+    data.stopTime = _stopTime;
+    data.delayTime = _delayTime;
+    data.stopTimeAssigned = _stopTimeAssigned;
+    data.isLiveEditting = _isLiveEditting;
 }
 

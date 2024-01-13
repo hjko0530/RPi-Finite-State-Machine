@@ -34,12 +34,6 @@ class StateMachine{
         void ST_Play();
         void ST_Pause();
         void ST_Stop();
-
-        //action functions  
-        void ACT_Play();
-        void ACT_Pause();
-        void ACT_Stop();
-        void ACT_Resume();
         //exit function
         void EX_Play();
         void EX_Pause();
@@ -59,23 +53,17 @@ class StateMachine{
             &StateMachine::ST_Pause,
             &StateMachine::ST_Stop
         };
-        void (StateMachine::*ACT_func[4])() = {
-            &StateMachine::ACT_Play,
-            &StateMachine::ACT_Pause,
-            &StateMachine::ACT_Stop,
-            &StateMachine::ACT_Resume
-        };
         void (StateMachine::*EX_func[3])() = {
             &StateMachine::EX_Play,
             &StateMachine::EX_Pause,
             &StateMachine::EX_Stop
         };
         void (StateMachine::*EN_func[3])() = {
-        &StateMachine::EN_Play,
-        &StateMachine::EN_Pause,
-        &StateMachine::EN_Stop
+            &StateMachine::EN_Play,
+            &StateMachine::EN_Pause,
+            &StateMachine::EN_Stop
         };
-        void setState(int nextState);
+        //void setState(int nextState);
         void setData(timeval _baseTime, timeval _playedTime, long _stopTime, long _delayTime, bool _stopTimeAssigned, bool _isLiveEditting);
         timeval getPlayedTime();
 };

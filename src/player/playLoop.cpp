@@ -49,8 +49,9 @@ int main(int argc, char *argv[]){
     // led_playing = false;
     // timeval playedTime;
     StateMachine playingState();
+
     while (1) {
-        timeval tv;
+        /*timeval tv;
         tv = getCalculatedTime(baseTime);
         // This may be packed into ST_PLAY
         if (playingState.getCurrentState() == S_PLAY && !delaying) {
@@ -58,9 +59,10 @@ int main(int argc, char *argv[]){
             if (played_us > playingState.data.stopTime && playingState.data.stopTime != -1) {
                 stop(&playingState);
             }
-        }
+        }*/
         // This means Entering S_PLAY ???
-        if (!delaying && playingState.getCurrentState()!=S_PLAY && led_loop.joinable() && of_loop.joinable()) {
+        //pack into EN_PLAY
+        /*if (!delaying && playingState.getCurrentState()!=S_PLAY && led_loop.joinable() && of_loop.joinable()) {
             cerr << "[Loop] join" << endl;
             led_loop.join();
             of_loop.join();
@@ -69,8 +71,8 @@ int main(int argc, char *argv[]){
             stop(&playingState);
             cerr << "[Loop] finished" << endl;
             releaseLock(dancer_fd, path.c_str());
-        }
-
+        }*/
+        
         n = read(rd_fd, cmd_buf, MAXLEN);
         std::string cmd_str = cmd_buf;
         if (n > 0) {
