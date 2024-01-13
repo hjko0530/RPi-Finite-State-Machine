@@ -266,7 +266,7 @@ void LEDPlayer::loop(StateMachine *fsm) {
         gettimeofday(&currentTime, NULL);
         float fps = 1000000.0 / getElapsedTime(lastTime, currentTime);
 
-        if (fsm->getCurrentState==S_STOP) {
+        if (fsm->getCurrentState() == S_STOP||fsm->getCurrentState() == S_PAUSE) {
             statusLists.clear();
             for (unsigned int i = 0; i < frameIds.size(); i++) {
                 // dark all

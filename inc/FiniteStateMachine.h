@@ -24,7 +24,7 @@ enum { S_PLAY, S_PAUSE, S_STOP };
 // typedef void (*StateFunc)();  // function executed in each state
 class StateMachine{
     private:
-        int currentState; 
+        int currentState,nextState; 
         int TransitionTable[3][4]={
         {EVENT_IGNORE, S_PAUSE,S_STOP, CANNOT_HAPPEN},
         {CANNOT_HAPPEN, EVENT_IGNORE, S_STOP, S_PLAY},
@@ -53,7 +53,7 @@ class StateMachine{
         playLoop_Data data; 
         StateMachine(); //init from initial state, maybe need to add more init parameters?
         int getCurrentState();
-        void handle_event(Event cmd);
+        void transition(int cmd);
         void (StateMachine::*ST_func[3])() = {
             &StateMachine::ST_Play,
             &StateMachine::ST_Pause,
@@ -77,6 +77,7 @@ class StateMachine{
         };
         void setState(int nextState);
         void setData(timeval _baseTime, timeval _playedTime, long _stopTime, long _delayTime, bool _stopTimeAssigned, bool _isLiveEditting);
+        timeval getPlayedTime();
 };
 
 
