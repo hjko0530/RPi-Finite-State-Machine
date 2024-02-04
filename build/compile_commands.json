@@ -1,0 +1,67 @@
+[
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall -pthread   -pthread -o CMakeFiles/player.dir/src/player/playLoop.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/player/playLoop.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/player/playLoop.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall -pthread   -o CMakeFiles/list.dir/src/commands/list.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/commands/list.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/commands/list.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall -pthread   -o CMakeFiles/StateMachineLIB.dir/src/player/StateMachine.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/player/StateMachine.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/player/StateMachine.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall -pthread   -o CMakeFiles/StateMachineLIB.dir/src/player/FSM_Common.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/player/FSM_Common.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/player/FSM_Common.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall -pthread   -o CMakeFiles/load.dir/src/commands/load.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/commands/load.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/commands/load.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc   -std=c++17 -Wall -pthread   -o CMakeFiles/playerctl.dir/src/commands/playerctl.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/commands/playerctl.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/commands/playerctl.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall -pthread   -o CMakeFiles/playerLIB.dir/src/player/LEDPlayer.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/player/LEDPlayer.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/player/LEDPlayer.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall -pthread   -o CMakeFiles/playerLIB.dir/src/player/OFPlayer.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/player/OFPlayer.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/player/OFPlayer.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall -pthread   -o CMakeFiles/playerLIB.dir/src/commands/player.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/commands/player.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/commands/player.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/software",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/software/inc -I/home/pi/LightDance-RPi/controller/software/../hardware/inc -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall -pthread   -o CMakeFiles/parttest.dir/src/commands/partTest.cpp.o -c /home/pi/LightDance-RPi/controller/software/src/commands/partTest.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/software/src/commands/partTest.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/hardware",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall   -o CMakeFiles/hardware.dir/src/LEDController.cpp.o -c /home/pi/LightDance-RPi/controller/hardware/src/LEDController.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/hardware/src/LEDController.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/hardware",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall   -o CMakeFiles/hardware.dir/src/LEDController_umb.cpp.o -c /home/pi/LightDance-RPi/controller/hardware/src/LEDController_umb.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/hardware/src/LEDController_umb.cpp"
+},
+{
+  "directory": "/home/pi/LightDance-RPi/controller/build/hardware",
+  "command": "/usr/bin/c++   -I/home/pi/LightDance-RPi/controller/hardware/inc   -std=c++17 -Wall   -o CMakeFiles/hardware.dir/src/OFController.cpp.o -c /home/pi/LightDance-RPi/controller/hardware/src/OFController.cpp",
+  "file": "/home/pi/LightDance-RPi/controller/hardware/src/OFController.cpp"
+}
+]

@@ -1,0 +1,9 @@
+fatal: not a git repository: /home/pi/LightDance-RPi/controller/hardware/../../.git/modules/controller/hardware
+/home/pi/LightDance-RPi/controller/software/src/player/StateMachine.cpp: In member function ‘void StateMachine::EN_Play()’:
+/home/pi/LightDance-RPi/controller/software/src/player/StateMachine.cpp:102:20: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘long int’ [-Wformat=]
+     fprintf(stderr,"[DELAY]delayTime[%d]\n",data.delayTime);
+                    ^~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~
+/home/pi/LightDance-RPi/controller/software/src/player/StateMachine.cpp:103:13: warning: unused variable ‘tv’ [-Wunused-variable]
+     timeval tv;    //delay
+             ^~
+Unit /etc/systemd/system/startup.service is masked, ignoring.

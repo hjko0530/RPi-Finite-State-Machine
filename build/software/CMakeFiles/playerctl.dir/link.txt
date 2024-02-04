@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++17 -Wall -pthread   CMakeFiles/playerctl.dir/src/commands/playerctl.cpp.o  -o playerctl  /usr/lib/arm-linux-gnueabihf/libboost_serialization.so 

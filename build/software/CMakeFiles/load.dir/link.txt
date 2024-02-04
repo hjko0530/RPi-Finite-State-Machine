@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++17 -Wall -pthread   CMakeFiles/load.dir/src/commands/load.cpp.o  -o load  /usr/lib/arm-linux-gnueabihf/libboost_serialization.so ../hardware/libhardware.a libplayerLIB.a libStateMachineLIB.a libplayerLIB.a libStateMachineLIB.a /usr/lib/arm-linux-gnueabihf/libboost_serialization.so ../hardware/libhardware.a -lws2811 -lm 

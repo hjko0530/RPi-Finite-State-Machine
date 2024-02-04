@@ -1,0 +1,2 @@
+/usr/bin/ar qc libStateMachineLIB.a  CMakeFiles/StateMachineLIB.dir/src/player/StateMachine.cpp.o CMakeFiles/StateMachineLIB.dir/src/player/FSM_Common.cpp.o
+/usr/bin/ranlib libStateMachineLIB.a

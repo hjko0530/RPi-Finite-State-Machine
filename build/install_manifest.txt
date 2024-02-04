@@ -1,0 +1,5 @@
+/home/pi/LightDance-RPi/controller/bin/list
+/home/pi/LightDance-RPi/controller/bin/load
+/home/pi/LightDance-RPi/controller/bin/parttest
+/home/pi/LightDance-RPi/controller/bin/playerctl
+/home/pi/LightDance-RPi/controller/bin/player

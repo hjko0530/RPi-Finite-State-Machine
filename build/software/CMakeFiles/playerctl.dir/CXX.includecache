@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../software/inc/command.h
+algorithm
+-
+iostream
+-
+map
+-
+string
+-
+vector
+-
+
+/home/pi/LightDance-RPi/controller/software/src/commands/playerctl.cpp
+fcntl.h
+-
+stdio.h
+-
+stdlib.h
+-
+sys/stat.h
+-
+time.h
+-
+unistd.h
+-
+algorithm
+-
+cctype
+-
+set
+-
+sstream
+-
+string
+-
+command.h
+/home/pi/LightDance-RPi/controller/software/src/commands/command.h
+

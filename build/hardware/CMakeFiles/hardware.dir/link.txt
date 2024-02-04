@@ -1,0 +1,2 @@
+/usr/bin/ar qc libhardware.a  CMakeFiles/hardware.dir/src/LEDController.cpp.o CMakeFiles/hardware.dir/src/LEDController_umb.cpp.o CMakeFiles/hardware.dir/src/OFController.cpp.o
+/usr/bin/ranlib libhardware.a
