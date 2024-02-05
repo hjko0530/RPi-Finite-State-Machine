@@ -1,25 +1,27 @@
+
 cmake_minimum_required(VERSION 3.10)
 project(hardware)
 
-set(SOURCE src)
-
+set(CMAKE_CXX_STANDARD 17)
+set(LED_LIBRARY ws2811)
 set(INCLUDES inc)
-set(LIBRARIES ws2811)
-
-# hardware
+#set(INSTALL ${CMAKE_SOURCE_DIR}/bin)
 add_library(
-    hardware
-    STATIC
-    src/LEDController.cpp
-    src/LEDController_umb.cpp
-    src/OFController.cpp
-)
+	hardware
+	STATIC
+	./src/OFController.cpp
+	./src/LEDController.cpp
+) 
+
 target_include_directories(
-    hardware
-    PUBLIC
-    ${INCLUDES}
+  hardware
+  PUBLIC
+  ${INCLUDES}
 )
+
+#add_subdirectory(./inc/rpi_ws281x)
+
 target_link_libraries(
-    hardware
-    ${LIBRARIES}
+	hardware
+	${LED_LIBRARY}
 )

@@ -229,7 +229,7 @@ void OFPlayer::delayDisplay(const bool *delayingDisplay) {
 
     // Let OF lightall for 1/5 times of delayTime
     if (*delayingDisplay) {
-        setLightStatus(statusList, 100, 0, 0, 100);
+        setLightStatus(statusList,100, 0, 0, 255);
         controller.sendAll(castStatusList(statusList));
     } else {
         setLightStatus(statusList, 0, 0, 0, 0);

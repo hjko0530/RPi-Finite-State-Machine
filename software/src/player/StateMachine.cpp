@@ -91,8 +91,8 @@ void StateMachine::EX_Pause() {
 
 void StateMachine::EX_Stop() {
     restart();
-    data.playedTime.tv_sec=0;
-    data.playedTime.tv_usec=0;
+   // data.playedTime.tv_sec=0;
+   // data.playedTime.tv_usec=0;
     data.delayDisplay=true;
 }
 // Entry functions

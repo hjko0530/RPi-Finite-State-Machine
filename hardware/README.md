@@ -1,8 +1,15 @@
-# 2023-Hardware-Library
+# Build code
 
-## Testing without Hardware
+1. Make build folder
 
-```shell
-# change to logging version before build
-git checkout local_test
+```bash
+mkdir build
+cd build
+```
+
+2. Build file
+
+```bash
+cmake ../
+cmake --build .
 ```

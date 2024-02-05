@@ -14,33 +14,30 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
+#include "Config.h"
+
 using namespace std;
 
-// define
-#define NUMPCA 7
-const int PCAAddr[] = {0x1f, 0x20, 0x22, 0x23, 0x5b, 0x5c, 0x5e};
-
 class OFColor {
-   public:
-    OFColor();
-    OFColor(const int &colorCode);
-    int getR();
-    int getG();
-    int getB();
-
-   private:
-    int r, g, b;
+    public:
+        OFColor();
+        int getR();
+        int getG();
+        int getB();
+        void setColor(const int &colorCode);
+    private:
+        int r, g, b;
 };
 
 class OFController {
-   public:
-    OFController();
-    int init();
-    int sendAll(const vector<int> &statusLists);
-
-   private:
-    int I2CInit();
-    int fd[NUMPCA];
+    public:
+        OFController();
+        int init();
+        int sendAll(const vector<int> &statusLists);
+    private:
+        int I2CInit();
+        int fd[Config::NUMPCA];
+        bool err_flag[Config::NUMPCA];
+        void I2C_Specified_Init(int i);
 };
-
 #endif

@@ -123,7 +123,7 @@ inline int parse_command(StateMachine* fsm,std::string str) {
             else if (cmd.size() >= 3 && cmd[cmd.size() - 2] == "-d") {
                 fsm->data.delayTime = std::stoi(cmd[cmd.size() - 1]);//*1000;//saved as us
                 if (cmd.size() > 3) {
-                    startusec = std::stoi(cmd[1]);
+                    startusec = std::stoi(cmd[1])*1000;
                 }
                 if (cmd.size() > 4) {
                     fsm->data.stopTime = std::stoi(cmd[2]);
@@ -131,13 +131,14 @@ inline int parse_command(StateMachine* fsm,std::string str) {
                 }
             } else {
                 if (cmd.size()>1) {
-                    startusec = std::stoi(cmd[1]);
+                    startusec = std::stoi(cmd[1])*1000;
 		}
                 if (cmd.size() > 2) {
                     fsm->data.stopTime = std::stoi(cmd[2]);
                     fsm->data.stopTimeAssigned = true;
                 }
             }
+	    fprintf(stderr,"startusec[%d]\n",startusec);
             fsm->data.playedTime.tv_sec = startusec / 1000000;
             fsm->data.playedTime.tv_usec = startusec % 1000000;
             }

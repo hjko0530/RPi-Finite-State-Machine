@@ -15,7 +15,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-
 #include <string>
 
 // library for WS2812
@@ -25,8 +24,8 @@
 #include "pwm.h"
 #include "ws2811.h"
 
-// for umbrella
-#include "LEDController_umb.h"
+#include "Config.h"
+
 
 // parameters for WS2812
 #define TARGET_FREQ WS2811_TARGET_FREQ
@@ -37,7 +36,7 @@
 class LEDColor {
    public:
     LEDColor();
-    LEDColor(const int &colorCode);
+    void setColor(const int &colorCode);
     uint32_t getRGB();
 
    private:
@@ -48,160 +47,147 @@ class LEDColor {
 };
 
 class LEDController {
-   public:
-    LEDController();
+    public:
+        LEDController();
+        int init(const std::vector<int> &shape);
+        int sendAll(const std::vector<std::vector<int>> &statusLists);
+        void finish();
+        int num_channel;
 
-    int init(const std::vector<int> &shape);
+    private:
+        void gpioInit();
+        void close_gpio();
+        void select_channel(int channel);
+        int play(const std::vector<std::vector<int>> &statusLists);
+        int A0, A1, A2;
+        ws2811_t ledString[8] = {
+            {
+                .freq = TARGET_FREQ,
+                .dmanum = DMA,
+                .channel =
+                    {
+                        [0] =
+                            {
+                                .gpionum = GPIO_PIN,
+                                .invert = 0,
+                                .count = Config::WS2812_NUM_LED[0],
+                                .strip_type = STRIP_TYPE,
+                                .brightness = 255,
+                            },
+                    },
+            },
 
-    int sendAll(const std::vector<std::vector<int>> &statusLists);
-    // send all data to RPI and push them to LED strips.
-    // return value:
-    // 0: OK
-    // -1: The data size of statausLists is not consist with number of strips
-    // initialized
+            {
+                .freq = TARGET_FREQ,
+                .dmanum = DMA,
+                .channel =
+                    {
+                        [0] =
+                            {
+                                .gpionum = GPIO_PIN,
+                                .invert = 0,
+                                .count = Config::WS2812_NUM_LED[1],
+                                .strip_type = STRIP_TYPE,
+                                .brightness = 255,
+                            },
+                    },
+            },
 
-    void finish();
+            {
+                .freq = TARGET_FREQ,
+                .dmanum = DMA,
+                .channel =
+                    {
+                        [0] =
+                            {
+                                .gpionum = GPIO_PIN,
+                                .invert = 0,
+                                .count = Config::WS2812_NUM_LED[2],
+                                .strip_type = STRIP_TYPE,
+                                .brightness = 255,
+                            },
+                    },
+            },
 
-   private:
-    bool isumb;
-    LEDController_umb umb;
-    ws2811_t ledString[8] = {
-        {
-            .freq = TARGET_FREQ,
-            .dmanum = DMA,
-            .channel =
-                {
-                    [0] =
-                        {
-                            .gpionum = GPIO_PIN,
-                            .invert = 0,
-                            .count = 100,  // just for init
-                            .strip_type = STRIP_TYPE,
-                            .brightness = 255,
-                        },
-                },
-        },
+            {
+                .freq = TARGET_FREQ,
+                .dmanum = DMA,
+                .channel =
+                    {
+                        [0] =
+                            {
+                                .gpionum = GPIO_PIN,
+                                .invert = 0,
+                                .count = Config::WS2812_NUM_LED[3],
+                                .strip_type = STRIP_TYPE,
+                                .brightness = 255,
+                            },
+                    },
+            },
 
-        {
-            .freq = TARGET_FREQ,
-            .dmanum = DMA,
-            .channel =
-                {
-                    [0] =
-                        {
-                            .gpionum = GPIO_PIN,
-                            .invert = 0,
-                            .count = 100,  // just for init
-                            .strip_type = STRIP_TYPE,
-                            .brightness = 255,
-                        },
-                },
-        },
+            {
+                .freq = TARGET_FREQ,
+                .dmanum = DMA,
+                .channel =
+                    {
+                        [0] =
+                            {
+                                .gpionum = GPIO_PIN,
+                                .invert = 0,
+                                .count = Config::WS2812_NUM_LED[4],
+                                .strip_type = STRIP_TYPE,
+                                .brightness = 255,
+                            },
+                    },
+            },
 
-        {
-            .freq = TARGET_FREQ,
-            .dmanum = DMA,
-            .channel =
-                {
-                    [0] =
-                        {
-                            .gpionum = GPIO_PIN,
-                            .invert = 0,
-                            .count = 100,  // just for init
-                            .strip_type = STRIP_TYPE,
-                            .brightness = 255,
-                        },
-                },
-        },
+            {
+                .freq = TARGET_FREQ,
+                .dmanum = DMA,
+                .channel =
+                    {
+                        [0] =
+                            {
+                                .gpionum = GPIO_PIN,
+                                .invert = 0,
+                                .count = Config::WS2812_NUM_LED[5],
+                                .strip_type = STRIP_TYPE,
+                                .brightness = 255,
+                            },
+                    },
+            },
 
-        {
-            .freq = TARGET_FREQ,
-            .dmanum = DMA,
-            .channel =
-                {
-                    [0] =
-                        {
-                            .gpionum = GPIO_PIN,
-                            .invert = 0,
-                            .count = 100,  // just for init
-                            .strip_type = STRIP_TYPE,
-                            .brightness = 255,
-                        },
-                },
-        },
-
-        {
-            .freq = TARGET_FREQ,
-            .dmanum = DMA,
-            .channel =
-                {
-                    [0] =
-                        {
-                            .gpionum = GPIO_PIN,
-                            .invert = 0,
-                            .count = 100,  // just for init
-                            .strip_type = STRIP_TYPE,
-                            .brightness = 255,
-                        },
-                },
-        },
-
-        {
-            .freq = TARGET_FREQ,
-            .dmanum = DMA,
-            .channel =
-                {
-                    [0] =
-                        {
-                            .gpionum = GPIO_PIN,
-                            .invert = 0,
-                            .count = 100,  // just for init
-                            .strip_type = STRIP_TYPE,
-                            .brightness = 255,
-                        },
-                },
-        },
-
-        {
-            .freq = TARGET_FREQ,
-            .dmanum = DMA,
-            .channel =
-                {
-                    [0] =
-                        {
-                            .gpionum = GPIO_PIN,
-                            .invert = 0,
-                            .count = 100,  // just for init
-                            .strip_type = STRIP_TYPE,
-                            .brightness = 255,
-                        },
-                },
-        },
-        {
-            .freq = TARGET_FREQ,
-            .dmanum = DMA,
-            .channel =
-                {
-                    [0] =
-                        {
-                            .gpionum = GPIO_PIN,
-                            .invert = 0,
-                            .count = 100,  // just for init
-                            .strip_type = STRIP_TYPE,
-                            .brightness = 255,
-                        },
-                },
-        },
-    };
-    std::vector<int> stripShape;
-    int stripNum;
-
-    int play(const std::vector<std::vector<int>> &statusLists);
-    void gpioInit();
-    void select_channel(int channel);
-    void close_gpio();
-
-    int A0, A1, A2;
+            {
+                .freq = TARGET_FREQ,
+                .dmanum = DMA,
+                .channel =
+                    {
+                        [0] =
+                            {
+                                .gpionum = GPIO_PIN,
+                                .invert = 0,
+                                .count = Config::WS2812_NUM_LED[6],
+                                .strip_type = STRIP_TYPE,
+                                .brightness = 255,
+                            },
+                    },
+            },
+            {
+                .freq = TARGET_FREQ,
+                .dmanum = DMA,
+                .channel =
+                    {
+                        [0] =
+                            {
+                                .gpionum = GPIO_PIN,
+                                .invert = 0,
+                                .count = Config::WS2812_NUM_LED[7],
+                                .strip_type = STRIP_TYPE,
+                                .brightness = 255,
+                            },
+                    },
+            },
+	    
+        };
 };
-
 #endif

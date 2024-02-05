@@ -242,7 +242,7 @@ void LEDPlayer::delayDisplay(const bool *delayingDisplay) {
         for (unsigned int i = 0; i < frameIds.size(); i++) {
             vector<LEDStatus> statusList;
             for (int j = 0; j < stripShapes[i]; j++) {
-                statusList.push_back(LEDStatus(100, 0, 0, 100));
+                statusList.push_back(LEDStatus(100, 0, 0, 255));
             }
             statusLists.push_back(statusList);
         }
