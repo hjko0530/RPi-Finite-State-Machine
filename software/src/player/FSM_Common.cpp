@@ -1,6 +1,3 @@
-
-
-
 #include <sys/time.h>
 #include <iostream>
 #include <thread> 

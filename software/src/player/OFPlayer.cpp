@@ -81,7 +81,7 @@ void saveOFPlayer(OFPlayer &player, const char *filename) {
     // make an archive
     ofstream ofs(filename);
     if (!ofs) {
-        cerr << "File Not Found! ( " << filename << " )" << endl;
+        cerr << "[OF] File Not Found! ( " << filename << " )\n";
         return;
     }
     boost::archive::text_oarchive oa(ofs);
@@ -92,7 +92,7 @@ bool restoreOFPlayer(OFPlayer &player, const char *filename) {
     // open the archive
     ifstream ifs(filename);
     if (!ifs) {
-        cerr << "File Not Found! ( " << filename << " )" << endl;
+        cerr << "[OF] File Not Found! ( " << filename << " )\n";
         return false;
     }
     boost::archive::text_iarchive ia(ifs);
@@ -242,12 +242,15 @@ void OFPlayer::delayDisplay(const bool *delayingDisplay) {
         ofptr->loop(fsm);
 	return NULL;
 }*/
-void OFPlayer::darkAll(){ 
-  vector<OFStatus> statusList;
-  setLightStatus(statusList, 0, 0, 0, 0);
-  controller.sendAll(castStatusList(statusList));
-  return;
+
+void OFPlayer::darkAll(){
+        fprintf(stderr,"[OF] dark all\n");
+        vector<OFStatus> statusList;
+        setLightStatus(statusList, 0, 0, 0, 0);
+        controller.sendAll(castStatusList(statusList));
+        return;
 }
+
 void OFPlayer::loop(StateMachine *fsm) {
     timeval currentTime;
     vector<OFStatus> statusList;
@@ -266,13 +269,12 @@ void OFPlayer::loop(StateMachine *fsm) {
             // TODO: finish darkall
           /*  setLightStatus(statusList, 0, 0, 0, 0);
             controller.sendAll(castStatusList(statusList));*/
-            break;
+            break;  // #hjko: the reason why EN_PAUSE need restart 
         }
         if (fsm->getCurrentState() == S_PLAY) {
             const long elapsedTime = getElapsedTime(fsm->data.baseTime, currentTime);
             const long elapsedTimeInMs = elapsedTime / 1000l;
             statusList.clear();
-
             // find status
             frameId = findFrameId(elapsedTimeInMs);
             if (frameId == -1) break;
@@ -297,10 +299,11 @@ void OFPlayer::loop(StateMachine *fsm) {
 #endif
             if (frameId == frameList.size() - 1) {
                 break;
+                // #hjko: use statemachine to close the thread, don't close it automatically
             }
 
             // fprintf(stderr, "[OF] Time: %s, FPS: %4.2f\n",
-            //         parseMicroSec(elapsedTime).c_str(), fps);
+            // parseMicroSec(elapsedTime).c_str(), fps);
 
             this_thread::yield();
         }

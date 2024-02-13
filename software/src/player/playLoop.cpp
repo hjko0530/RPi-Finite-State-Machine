@@ -37,53 +37,39 @@ int main(int argc, char *argv[]){
     // create player_to_cmd
     if (mkfifo(wr_fifo, 0666) == -1) {
         if (errno != EEXIST) {
-            fprintf(stderr, "Cannot create %s\n", wr_fifo);
+            fprintf(stderr, "[LOOP] Cannot create %s\n", wr_fifo);
         } else {
-            fprintf(stderr, "%s already exists\n", wr_fifo);
+            fprintf(stderr, "[LOOP] %s already exists\n", wr_fifo);
         }
     } else
-        fprintf(stderr, "%s created\n", wr_fifo);
+        fprintf(stderr, "[LOOP] %s created\n", wr_fifo);
     int rd_fd, n;
     if (mkfifo(rd_fifo, 0666) == -1) {
         if (errno != EEXIST) {
-            fprintf(stderr, "Cannot create %s\n", rd_fifo);
+            fprintf(stderr, "[LOOP] Cannot create %s\n", rd_fifo);
         } else {
-            fprintf(stderr, "%s already exists\n", rd_fifo);
+            fprintf(stderr, "[LOOP] %s already exists\n", rd_fifo);
         }
     } else
-        fprintf(stderr, "%s created\n", rd_fifo);
+        fprintf(stderr, "[LOOP] %s created\n", rd_fifo);
     rd_fd = open(rd_fifo, O_RDONLY | O_NONBLOCK);
     if (rd_fd == -1) perror("open");
     char cmd_buf[MAXLEN];
-    // of_playing = false;
-    // led_playing = false;
-    // timeval playedTime;
+
     StateMachine* playingState=new StateMachine();
 
     while (1) {
-        /*timeval tv;
-        tv = getCalculatedTime(baseTime);
-        // This may be packed into ST_PLAY
-        if (playingState.getCurrentState() == S_PLAY && !delaying) {
-            long played_us = tv.tv_sec * 1000000 + tv.tv_usec;
-            if (played_us > playingState.data.stopTime && playingState.data.stopTime != -1) {
-                stop(&playingState);
-            }
-        }*/
-        // This means Entering S_PLAY ???
-        //pack into EN_PLAY
-        // printf("entering while loop\n");        
+        //read and parse command       
         n = read(rd_fd, cmd_buf, MAXLEN);
         std::string cmd_str = cmd_buf;
         if (n > 0) {
-            fprintf(stderr,"parsing command\n");
+            fprintf(stderr,"[LOOP] parsing command\n");
 	    int cmd = parse_command(playingState,cmd_buf);
-            fprintf(stderr, "[Loop] cmd_buf: %s, cmd: %d\n", cmd_buf, cmd);
-            playingState->transition(cmd);//trans?
-           
+            fprintf(stderr, "[LOOP] cmd_buf: %s, cmd: %d\n", cmd_buf, cmd);
+            playingState->transition(cmd);         
         }
         else{
-           playingState->stating(playingState->getCurrentState());
+           playingState->stating(playingState->getCurrentState());      //as no cmd, keep stating
         }
     }
     close(rd_fd);

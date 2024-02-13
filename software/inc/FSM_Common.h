@@ -25,7 +25,6 @@ extern const char *wr_fifo;
 inline void write_fifo(bool success) {
     int wr_fd;
     std::string msg;
-
     wr_fd = open(wr_fifo, O_WRONLY);
     if (success) {
         msg = "0";
@@ -39,10 +38,8 @@ inline void write_fifo(bool success) {
 inline const std::vector<std::string> split(const std::string &str, const std::string &pattern) {
     std::vector<std::string> result;
     std::string::size_type begin, end;
-
     end = str.find(pattern);
     begin = 0;
-
     while (end != std::string::npos) {
         if (end - begin != 0) {
             result.push_back(str.substr(begin, end - begin));
@@ -50,14 +47,13 @@ inline const std::vector<std::string> split(const std::string &str, const std::s
         begin = end + pattern.size();
         end = str.find(pattern, begin);
     }
-
     if (begin != str.length()) {
         result.push_back(str.substr(begin));
     }
     return result;
 }
 
-inline timeval getCalculatedTime(timeval subtrahend) {
+inline timeval getCalculatedTime(timeval subtrahend) {      // current time minus the subtrahend
     timeval currentTime;
     gettimeofday(&currentTime, NULL);
     timeval time;
@@ -70,28 +66,28 @@ inline timeval getCalculatedTime(timeval subtrahend) {
     return time;
 }
 inline bool restart() {
-    printf("restart\n");
+    fprintf(stderr,"[FSM] restart\n");
     dancer_fd = tryGetLock(path.c_str());
- if (dancer_fd == -1) {
-        cerr << "[Error] Dancer is playing! Please stop it first!\n";
+    if (dancer_fd == -1) {
+        cerr << "[FSM] Dancer is playing! Please stop it first!\n";
         return 0;
     } else if (dancer_fd == -2) {
-        cerr << "[Error] dancer.dat file not found!\n";
+        cerr << "[FSM] dancer.dat file not found!\n";
         return 0;
     }
 
     if (!restorePlayer(player, path.c_str())) {
         // fprintf(stderr, "restorePlayer ERROR\n");
-        cerr << "[Error] Can't restorePlayer!\n";
+        cerr << "[FSM] Can't restorePlayer!\n";
         return false;
     }
     led_player = player.myLEDPlayer;
     led_player.init();
     of_player = player.myOFPlayer;
     of_player.init();
-    cerr << "Player loaded\n";
+    cerr << "[FSM] Player loaded\n";
     return true;
-   }
+}
 inline void resume( StateMachine* fsm ){
 	led_loop = std::thread(&LEDPlayer::loop, &led_player, fsm);
 	of_loop = std::thread(&OFPlayer::loop, &of_player, fsm);
@@ -99,9 +95,9 @@ inline void resume( StateMachine* fsm ){
 	of_loop.detach();
 	// pthread_create(&led_loop, NULL,&LEDPlayer::loop_helper, &led_player, fsm);
 	// pthread_create(&of_loop, NULL,&OFPlayer::loop_helper, &of_player , fsm);
-	 cerr << "[LED LOOP] thread running\n";
+	 cerr << "[FSM] thread running\n";
 	 return;
-   }
+}
 
 inline int parse_command(StateMachine* fsm,std::string str) {
     if (str.length() == 1) return -1;
@@ -117,7 +113,6 @@ inline int parse_command(StateMachine* fsm,std::string str) {
             if(fsm->getCurrentState()==S_PAUSE && cmd[1]=="0"&& cmd[2] == "-1" && cmd[4] == "0"){
                 write_fifo(true);
                 cmd_recv=C_RESUME;
-		cerr<<"[parse]RESUME\n";
                 return cmd_recv;
             }
             else if (cmd.size() >= 3 && cmd[cmd.size() - 2] == "-d") {
@@ -132,18 +127,18 @@ inline int parse_command(StateMachine* fsm,std::string str) {
             } else {
                 if (cmd.size()>1) {
                     startusec = std::stoi(cmd[1])*1000;
-		}
+		        }
                 if (cmd.size() > 2) {
                     fsm->data.stopTime = std::stoi(cmd[2]);
                     fsm->data.stopTimeAssigned = true;
                 }
             }
-	    fprintf(stderr,"startusec[%d]\n",startusec);
+	        //fprintf(stderr,"startusec[%d]\n",startusec);
             fsm->data.playedTime.tv_sec = startusec / 1000000;
             fsm->data.playedTime.tv_usec = startusec % 1000000;
             }
             cmd_recv=i;
-	    printf("command parsed\n");
+	        //printf("command parsed\n");
             write_fifo(true);
             return cmd_recv;
         }
