@@ -64,7 +64,7 @@ void StateMachine::EX_Play() {      //store playedTime
 }
 
 void StateMachine::EX_Pause() {
-    restart();
+    //restart();    #hjko
 }
 
 void StateMachine::EX_Stop() {
@@ -95,13 +95,13 @@ void StateMachine::EN_Play() {
 }
 
 void StateMachine::EN_Pause() {  
-    releaseLock(dancer_fd, path.c_str());
+    //releaseLock(dancer_fd, path.c_str());     #hjko
 }
 
 void StateMachine::EN_Stop() {
-    led_player.darkAll();
+    //led_player.darkAll(); #hjko
     led_player.controller.finish();
-    of_player.darkAll();
+    //of_player.darkAll(); #hjko
     releaseLock(dancer_fd, path.c_str());
     data.stopTimeAssigned = data.delayDisplay = false;
     data.stopTime = -1;

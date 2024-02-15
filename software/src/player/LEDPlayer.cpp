@@ -227,7 +227,6 @@ vector<vector<int>> LEDPlayer::castStatusLists(
 void LEDPlayer::init() {
     frameIds.resize(stripShapes.size());
     fill(frameIds.begin(), frameIds.end(), -1);
-
     controller.init(stripShapes);
     fprintf(stderr,"LEDPlayer init, Num: %d\n", (int)stripShapes.size());
 }
@@ -263,11 +262,10 @@ void LEDPlayer::delayDisplay(const bool *delayingDisplay) {
 	return NULL;
 }*/
 
-void LEDPlayer::darkAll(){
+void LEDPlayer::darkAll(){      //#hjko
     vector<vector<LEDStatus>> statusLists;
        	statusLists.clear();
             for (unsigned int i = 0; i < frameIds.size(); i++) {
-                // dark all
                 statusLists.push_back(vector<LEDStatus>(stripShapes[i]));
             }
             controller.sendAll(castStatusLists(statusLists));
@@ -283,30 +281,26 @@ void LEDPlayer::loop(StateMachine *fsm) {
 #endif
     //cerr<<"[LED Loop]Current State: "<<fsm->getCurrentState()<<"\n";
     while (true) {
-       
-	timeval lastTime = currentTime;
+	    timeval lastTime = currentTime;
         gettimeofday(&currentTime, NULL);
         float fps = 1000000.0 / getElapsedTime(lastTime, currentTime);
 	    //cerr<<"[LED] CurrentState: "<<fsm->getCurrentState()<<endl;
-        if (fsm->getCurrentState() == S_STOP||fsm->getCurrentState() == S_PAUSE) {
-	    /*cerr<<"[LED Loop] Now Stopped\n";
-            statusLists.clear();
-            for (unsigned int i = 0; i < frameIds.size(); i++) {
-                // dark all
-                statusLists.push_back(vector<LEDStatus>(stripShapes[i]));
-            }
-            controller.sendAll(castStatusLists(statusLists));
-	    cerr<<"[LED] Break Loop\n";*/       //use dark all function instead
-            break;  // #hjko: the reason why EN_PAUSE need restart
+        if (fsm->getCurrentState() == S_STOP) {
+	        //cerr<<"[LED Loop] Now Stopped\n";
+	        //cerr<<"[LED] Break Loop\n";*/       
+            break; 
+        }
+        if(fsm->getCurrentState() == S_PAUSE){
+            continue;
         }
         if (fsm->getCurrentState()==S_PLAY) {	
             const long elapsedTime =
-                getElapsedTime(fsm->data.baseTime, currentTime);  // us
+            getElapsedTime(fsm->data.baseTime, currentTime);  // us
             // const int currentTimeId = getTimeId(elapsedTime);
 	        //  fprintf(stderr,"[LED Loop] ElapsedTime [%d]\n",elapsedTime);
 	        calculateFrameIds(elapsedTime / 1000l);
             statusLists.clear();
-            bool ended = true;
+            //bool ended = true;    #hjko
             for (unsigned int i = 0; i < frameIds.size(); i++) {
                 const int &frameId = frameIds[i];
                 const vector<LEDFrame> &frameList = frameLists[i];
@@ -317,10 +311,6 @@ void LEDPlayer::loop(StateMachine *fsm) {
                     continue;
                 }
 	            //	fprintf(stderr, "[LED Loop] framelistSize [%d], frameId [%d]\n", (int)frameList.size(), frameId);
-                if (frameId != (int)frameList.size() - 1) {
-                    ended = false;
-                }
-
                 const LEDFrame &frame = frameList[frameId];
                 if (frame.fade && (frameId + 1) < frameList.size()) {
                     const long startTime = frameList[frameId].start;    // ms
@@ -333,8 +323,11 @@ void LEDPlayer::loop(StateMachine *fsm) {
                 } else {
                     statusLists.push_back(frameList[frameId].statusList);
                 }
+                if (frameId != (int)frameList.size() - 1) {
+                    //ended = false;    #hjko
+                    break;
+                }
             }
-
             controller.sendAll(castStatusLists(statusLists));
 	        //fprintf(stderr,"[LED] Status Sent\n";)
 #ifdef PLAYER_DEBUG
@@ -351,14 +344,10 @@ void LEDPlayer::loop(StateMachine *fsm) {
             }
             logFile << buf;
 #endif
-            if (ended) {
-            	cerr << "[LED] Ended\n";
-		        break;
-                // #hjko: use statemachine to close the thread, w/o using boolean
-            }
             this_thread::yield();
         }
     }
+    darkAll();
     cerr << "[LED] finish\n";
    // controller.finish();
 #ifdef PLAYER_DEBUG

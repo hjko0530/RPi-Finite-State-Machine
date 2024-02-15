@@ -243,7 +243,7 @@ void OFPlayer::delayDisplay(const bool *delayingDisplay) {
 	return NULL;
 }*/
 
-void OFPlayer::darkAll(){
+void OFPlayer::darkAll(){       //#hjko
         fprintf(stderr,"[OF] dark all\n");
         vector<OFStatus> statusList;
         setLightStatus(statusList, 0, 0, 0, 0);
@@ -265,11 +265,11 @@ void OFPlayer::loop(StateMachine *fsm) {
         gettimeofday(&currentTime, NULL);
         float fps = 1000000.0 / getElapsedTime(lastTime, currentTime);
 
-        if (fsm->getCurrentState() == S_STOP||fsm->getCurrentState() == S_PAUSE) {
-            // TODO: finish darkall
-          /*  setLightStatus(statusList, 0, 0, 0, 0);
-            controller.sendAll(castStatusList(statusList));*/
-            break;  // #hjko: the reason why EN_PAUSE need restart 
+        if (fsm->getCurrentState() == S_STOP) {
+            break;   
+        }
+        if(fsm->getCurrentState() == S_PAUSE) {
+            continue;
         }
         if (fsm->getCurrentState() == S_PLAY) {
             const long elapsedTime = getElapsedTime(fsm->data.baseTime, currentTime);
@@ -299,7 +299,6 @@ void OFPlayer::loop(StateMachine *fsm) {
 #endif
             if (frameId == frameList.size() - 1) {
                 break;
-                // #hjko: use statemachine to close the thread, don't close it automatically
             }
 
             // fprintf(stderr, "[OF] Time: %s, FPS: %4.2f\n",
@@ -308,6 +307,7 @@ void OFPlayer::loop(StateMachine *fsm) {
             this_thread::yield();
         }
     }
+    darkAll();
     cerr << "[OF] finish\n";
 
 #ifdef PLAYER_DEBUG

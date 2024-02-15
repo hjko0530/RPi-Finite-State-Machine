@@ -93,10 +93,8 @@ inline void resume( StateMachine* fsm ){
 	of_loop = std::thread(&OFPlayer::loop, &of_player, fsm);
 	led_loop.detach();
 	of_loop.detach();
-	// pthread_create(&led_loop, NULL,&LEDPlayer::loop_helper, &led_player, fsm);
-	// pthread_create(&of_loop, NULL,&OFPlayer::loop_helper, &of_player , fsm);
-	 cerr << "[FSM] thread running\n";
-	 return;
+	cerr << "[FSM] thread running\n";
+	return;
 }
 
 inline int parse_command(StateMachine* fsm,std::string str) {
